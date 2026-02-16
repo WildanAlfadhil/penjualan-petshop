@@ -19,6 +19,7 @@ ChartJS.register(
 
 function Dashboard() {
   const [stats, setStats] = useState({});
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
   const [salesChart, setSalesChart] = useState({ labels: [], values: [] });
   const [categoryChart, setCategoryChart] = useState({ labels: [], values: [] });
   const [topProducts, setTopProducts] = useState({ labels: [], values: [] });
@@ -126,15 +127,17 @@ function Dashboard() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="card bg-gradient-to-br from-blue-500 to-blue-600 text-white">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-blue-100 text-sm">Total Penjualan</p>
-                <p className="text-2xl font-bold mt-2">{formatCurrency(stats.total_sales || 0)}</p>
+          {user.role === 'admin' && (
+            <div className="card bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-blue-100 text-sm">Total Penjualan</p>
+                  <p className="text-2xl font-bold mt-2">{formatCurrency(stats.total_sales || 0)}</p>
+                </div>
+                <div className="text-4xl opacity-50">💰</div>
               </div>
-              <div className="text-4xl opacity-50">💰</div>
             </div>
-          </div>
+          )}
 
           <div className="card bg-gradient-to-br from-green-500 to-green-600 text-white">
             <div className="flex items-center justify-between">
@@ -169,10 +172,16 @@ function Dashboard() {
 
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <div className="card">
-            <h2 className="text-xl font-semibold mb-4">Trend Penjualan (7 Hari Terakhir)</h2>
-            <Line data={salesChartData} options={{ responsive: true, maintainAspectRatio: true }} />
-          </div>
+          {user.role === 'admin' ? (
+            <div className="card">
+              <h2 className="text-xl font-semibold mb-4">Trend Penjualan (7 Hari Terakhir)</h2>
+              <Line data={salesChartData} options={{ responsive: true, maintainAspectRatio: true }} />
+            </div>
+          ) : (
+            <div className="card flex items-center justify-center p-8">
+               <p className="text-gray-500">Anda tidak memiliki akses untuk melihat trend penjualan.</p>
+            </div>
+          )}
 
           <div className="card">
             <h2 className="text-xl font-semibold mb-4">Penjualan per Kategori</h2>

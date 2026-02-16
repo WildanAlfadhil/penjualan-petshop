@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, session
 from database import execute_query
+from routes.auth import admin_required
 
 categories_bp = Blueprint('categories', __name__)
 
@@ -42,6 +43,7 @@ def get_category(category_id):
         return jsonify({'success': False, 'message': 'Terjadi kesalahan server'}), 500
 
 @categories_bp.route('', methods=['POST'])
+@admin_required
 def create_category():
     """Create new category"""
     if not check_auth():
@@ -69,6 +71,7 @@ def create_category():
         return jsonify({'success': False, 'message': 'Terjadi kesalahan server'}), 500
 
 @categories_bp.route('/<int:category_id>', methods=['PUT'])
+@admin_required
 def update_category(category_id):
     """Update category"""
     if not check_auth():
@@ -92,6 +95,7 @@ def update_category(category_id):
         return jsonify({'success': False, 'message': 'Terjadi kesalahan server'}), 500
 
 @categories_bp.route('/<int:category_id>', methods=['DELETE'])
+@admin_required
 def delete_category(category_id):
     """Delete category"""
     if not check_auth():

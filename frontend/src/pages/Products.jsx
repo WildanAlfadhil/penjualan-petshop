@@ -16,6 +16,7 @@ function Products() {
     stock: '',
     image_url: 'https://via.placeholder.com/200',
   });
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   useEffect(() => {
     fetchProducts();
@@ -109,9 +110,11 @@ function Products() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Manajemen Produk</h1>
-          <button onClick={handleAdd} className="btn-primary">
-            + Tambah Produk
-          </button>
+          {user.role === 'admin' && (
+            <button onClick={handleAdd} className="btn-primary">
+              + Tambah Produk
+            </button>
+          )}
         </div>
 
         <div className="card mb-6">
@@ -149,12 +152,16 @@ function Products() {
                     </span>
                   </td>
                   <td>
-                    <button onClick={() => handleEdit(product)} className="text-blue-600 hover:text-blue-800 mr-3">
-                      Edit
-                    </button>
-                    <button onClick={() => handleDelete(product.id)} className="text-red-600 hover:text-red-800">
-                      Hapus
-                    </button>
+                    {user.role === 'admin' && (
+                      <>
+                        <button onClick={() => handleEdit(product)} className="text-blue-600 hover:text-blue-800 mr-3">
+                          Edit
+                        </button>
+                        <button onClick={() => handleDelete(product.id)} className="text-red-600 hover:text-red-800">
+                          Hapus
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}

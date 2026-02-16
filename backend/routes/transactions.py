@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, session
 from database import execute_query, get_db_connection
 import mysql.connector
+from routes.auth import admin_required
 
 transactions_bp = Blueprint('transactions', __name__)
 
@@ -150,6 +151,7 @@ def create_transaction():
         return jsonify({'success': False, 'message': 'Terjadi kesalahan server'}), 500
 
 @transactions_bp.route('/<int:transaction_id>', methods=['DELETE'])
+@admin_required
 def delete_transaction(transaction_id):
     """Delete transaction"""
     if not check_auth():

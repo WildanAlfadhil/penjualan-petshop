@@ -18,6 +18,7 @@ function Transactions() {
   });
   const [selectedProduct, setSelectedProduct] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   useEffect(() => {
     fetchTransactions();
@@ -211,9 +212,11 @@ function Transactions() {
                     </span>
                   </td>
                   <td>
-                    <button onClick={() => handleDelete(transaction.id)} className="text-red-600 hover:text-red-800">
-                      Hapus
-                    </button>
+                    {user.role === 'admin' && (
+                      <button onClick={() => handleDelete(transaction.id)} className="text-red-600 hover:text-red-800">
+                        Hapus
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

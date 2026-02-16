@@ -10,6 +10,7 @@ function Categories() {
     name: '',
     description: '',
   });
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   useEffect(() => {
     fetchCategories();
@@ -72,9 +73,11 @@ function Categories() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Manajemen Kategori</h1>
-          <button onClick={handleAdd} className="btn-primary">
-            + Tambah Kategori
-          </button>
+          {user.role === 'admin' && (
+            <button onClick={handleAdd} className="btn-primary">
+              + Tambah Kategori
+            </button>
+          )}
         </div>
 
         <div className="table-container">
@@ -94,12 +97,16 @@ function Categories() {
                   <td>{category.name}</td>
                   <td>{category.description}</td>
                   <td>
-                    <button onClick={() => handleEdit(category)} className="text-blue-600 hover:text-blue-800 mr-3">
-                      Edit
-                    </button>
-                    <button onClick={() => handleDelete(category.id)} className="text-red-600 hover:text-red-800">
-                      Hapus
-                    </button>
+                    {user.role === 'admin' && (
+                      <>
+                        <button onClick={() => handleEdit(category)} className="text-blue-600 hover:text-blue-800 mr-3">
+                          Edit
+                        </button>
+                        <button onClick={() => handleDelete(category.id)} className="text-red-600 hover:text-red-800">
+                          Hapus
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}

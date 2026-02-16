@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, session, send_file
 from database import get_db_connection
+from routes.auth import admin_required
 import os
 from datetime import datetime
 
@@ -10,6 +11,7 @@ def check_auth():
     return 'user_id' in session
 
 @backup_bp.route('/create', methods=['POST'])
+@admin_required
 def create_backup():
     """Create database backup"""
     if not check_auth():

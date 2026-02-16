@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, session
 from database import execute_query
+from routes.auth import admin_required
 
 products_bp = Blueprint('products', __name__)
 
@@ -67,6 +68,7 @@ def get_product(product_id):
         return jsonify({'success': False, 'message': 'Terjadi kesalahan server'}), 500
 
 @products_bp.route('', methods=['POST'])
+@admin_required
 def create_product():
     """Create new product"""
     if not check_auth():
@@ -104,6 +106,7 @@ def create_product():
         return jsonify({'success': False, 'message': 'Terjadi kesalahan server'}), 500
 
 @products_bp.route('/<int:product_id>', methods=['PUT'])
+@admin_required
 def update_product(product_id):
     """Update product"""
     if not check_auth():
@@ -140,6 +143,7 @@ def update_product(product_id):
         return jsonify({'success': False, 'message': 'Terjadi kesalahan server'}), 500
 
 @products_bp.route('/<int:product_id>', methods=['DELETE'])
+@admin_required
 def delete_product(product_id):
     """Delete product"""
     if not check_auth():

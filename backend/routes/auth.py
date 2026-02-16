@@ -4,9 +4,21 @@ import hashlib
 
 auth_bp = Blueprint('auth', __name__)
 
+
+from functools import wraps
+
 def hash_password(password):
     """Hash password using SHA256"""
     return hashlib.sha256(password.encode()).hexdigest()
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'role' not in session or session['role'] != 'admin':
+            return jsonify({'success': False, 'message': 'Unauthorized: Admin access required'}), 403
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
